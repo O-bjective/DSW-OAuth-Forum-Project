@@ -42,7 +42,7 @@ def home():
 def post():
     with open('jason.json', 'r+') as f:
     Data = json.load(f)
-    Data.dump(Data, f)
+    json.dump(Data, f)
     data = request.form;
     return Markup("<p>"+data["message"]+"</p>")
     #This function should add the new post to the JSON file of posts and then render home.html and display the posts.
