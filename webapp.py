@@ -41,7 +41,7 @@ def home():
 @app.route('/posted', methods=['POST'])
 def post():
     with open('jason.json', 'r+') as f:
-    Data = json.load(f)
+    data = json.load(f)
     json.dump(Data, f)
     data = request.form;
     return Markup("<p>"+data["message"]+"</p>")
