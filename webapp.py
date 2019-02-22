@@ -36,15 +36,24 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    with open('jason.json', 'r') as f:
+        data = json.load(f)
+    return render_template('home.html', past_posts=str(data))
 
 @app.route('/posted', methods=['POST'])
 def post():
-    with open('jason.json', 'r+') as f:
-        Data = json.load(f)
-        json.dump(Data, f)
-        Data = request.form;
-    return Markup("<p>"+data["message"]+"</p>")
+    with open('jason.json', 'r') as f:
+        data = json.load(f)
+
+    post = {}
+    post["user"] = "anon"
+    post["message"] = request.form["message"]
+    data.append(post)
+
+    with open('jason.json', 'w') as f:
+        json.dump(data, f)
+
+    return redirect(url_for("home"))
     #This function should add the new post to the JSON file of posts and then render home.html and display the posts.
     #Every post should include the username of the poster and text of the post.
 
