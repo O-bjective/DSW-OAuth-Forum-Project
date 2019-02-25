@@ -29,7 +29,7 @@ github = oauth.remote_app(
 #TODO: Create and set a global variable for the name of you JSON file here.  The file will be storedd on Heroku, so you don't need to make it in GitHub
 Jason = "jason.json"
 #TODO: Create the file on Heroku using os.system.  Ex) os.system("echo '[]'>"+myFile) puts '[]' into your file
-os.system("echo '[]'>"+Jason)
+os.system("echo []>"+Jason)
 
 @app.context_processor
 def inject_logged_in():
@@ -37,8 +37,8 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
-    #with open('jason.json', 'r') as f:
-        #data = json.load(f)
+    with open('jason.json', 'r') as f:
+        data = json.load(f)
     return render_template('home.html', past_posts=str(data))
 
 @app.route('/posted', methods=['POST'])
