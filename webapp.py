@@ -70,6 +70,7 @@ def logout():
 
 @app.route('/login/authorized')
 def authorized():
+    print("kasa")
     resp = github.authorized_response()
     if resp is None:
         session.clear()
