@@ -47,7 +47,7 @@ def post():
         data = json.load(f)
 
     post = {}
-    post["user"] = "anon"
+    post["user"] = session['user_data']['login']
     post["message"] = request.form["message"]
     data.append(post)
 
