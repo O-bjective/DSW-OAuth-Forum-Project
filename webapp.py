@@ -39,7 +39,12 @@ def inject_logged_in():
 def home():
     with open('jason.json', 'r') as f:
         data = json.load(f)
-    return render_template('home.html', past_posts=str(data))
+
+    allUserNames = "";
+    for unitcorn in data:
+        allUserNames += "<p>" + unitcorn["user"] + ": " + unitcorn['message'] + "</p>"
+
+    return render_template('home.html', past_posts=Markup(allUserNames))
 
 @app.route('/posted', methods=['POST'])
 def post():
