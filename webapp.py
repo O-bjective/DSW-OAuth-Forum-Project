@@ -51,6 +51,8 @@ def post():
     with open('jason.json', 'r') as f:
         data = json.load(f)
 
+
+
     post = {}
     post["user"] = session['user_data']['login']
     post["message"] = request.form["message"]
