@@ -2,6 +2,9 @@ from flask import Flask, redirect, url_for, session, request, jsonify, Markup
 from flask_oauthlib.client import OAuth
 from flask import render_template
 
+import pymongo
+import sys
+import dns
 import pprint
 import os
 import json
@@ -31,6 +34,18 @@ Jason = "jason.json"
 #TODO: Create the file on Heroku using os.system.  Ex) os.system("echo '[]'>"+myFile) puts '[]' into your file
 
 os.system("echo []>"+Jason)
+
+def main():
+    url = 'mongodb+srv://{}:{}@{}/{}'.format(
+        os.environ["MONGO_USERNAME"],
+        os.environ["MONGO_PASSWORD"],
+        os.environ["MONGO_HOST"],
+        os.environ["MONGO_DBNAME"]
+    )
+    client = pymongo.MongoClient(url)
+    db = client[os.environ["MONGO_DBNAME"]]
+    collection = db['text']
+        #mongodb+srv://Objective:<password>@cluster0-emrl4.mongodb.net/test?retryWrites=true
 
 @app.context_processor
 def inject_logged_in():
