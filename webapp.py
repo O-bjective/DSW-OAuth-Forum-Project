@@ -30,11 +30,19 @@ github = oauth.remote_app(
     )
 
 #TODO: Create and set a global variable for the name of you JSON file here.  The file will be storedd on Heroku, so you don't need to make it in GitHub
-Jason = "jason.json"
+
 #TODO: Create the file on Heroku using os.system.  Ex) os.system("echo '[]'>"+myFile) puts '[]' into your file
 
-os.system("echo []>"+Jason)
 
+url = 'mongodb+srv://{}:{}@{}/{}'.format(
+    os.environ["MONGO_USERNAME"],
+    os.environ["MONGO_PASSWORD"],
+    os.environ["MONGO_HOST"],
+    os.environ["MONGO_DBNAME"]
+)
+client = pymongo.MongoClient(os.environ["MONGO_HOST"])
+db = client[os.environ["MONGO_DBNAME"]]
+collection = db['text']
 def main():
     url = 'mongodb+srv://{}:{}@{}/{}'.format(
         os.environ["MONGO_USERNAME"],
@@ -44,8 +52,8 @@ def main():
     )
     client = pymongo.MongoClient(url)
     db = client[os.environ["MONGO_DBNAME"]]
-    collection = db['text']
-        #mongodb+srv://Objective:<password>@cluster0-emrl4.mongodb.net/test?retryWrites=true
+    collection = db['message']
+        #mongodb+srv://yoitsme:<password>@cluster0-sagjy.mongodb.net/test?retryWrites=true
 
 @app.context_processor
 def inject_logged_in():
@@ -53,29 +61,21 @@ def inject_logged_in():
 
 @app.route('/')
 def home():
-    with open('jason.json', 'r') as f:
-        data = json.load(f)
 
     allUserNames = "";
-    for unitcorn in data:
-        allUserNames += "<p>" + unitcorn["user"] + ": " + unitcorn['message'] + "</p>"
-
+    #collection.find_one({})
+    for text in collection.find({}):
+        allUserNames += "<p>" + text["user"] + ": " + text['message'] + "</p>"
+    from bson.objectid import ObjectId
     return render_template('home.html', past_posts=Markup(allUserNames))
 
 @app.route('/posted', methods=['POST'])
 def post():
-    with open('jason.json', 'r') as f:
-        data = json.load(f)
-
-
 
     post = {}
     post["user"] = session['user_data']['login']
     post["message"] = request.form["message"]
-    data.append(post)
-
-    with open('jason.json', 'w') as f:
-        json.dump(data, f)
+    collection.insert_one(post)
 
     return redirect(url_for("home"))
     #This function should add the new post to the JSON file of posts and then render home.html and display the posts.
@@ -84,7 +84,7 @@ def post():
 #redirect to GitHub's OAuth page and confirm callback URL
 @app.route('/login')
 def login():
-        return github.authorize(callback=url_for('authorized', _external=True, _scheme='https')) #callback URL must match the pre-configured callback URL
+        return github.authorize(callback=url_for('authorized', _external=True, _scheme='http')) #callback URL must match the pre-configured callback URL
 
 @app.route('/logout')
 def logout():
