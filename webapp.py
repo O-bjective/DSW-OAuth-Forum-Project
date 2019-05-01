@@ -65,7 +65,8 @@ def home():
     allUserNames = "";
     #collection.find_one({})
     for text in collection.find({}):
-        allUserNames += "<p>" + text["user"] + ": " + text['message'] + "</p>"
+        allUserNames += "<p>" + text["user"] + ": " + text['message'] + "</p>" + '<form action = "/delete" method = "post"> <button type="submit" name="delete" value="docid">Delete</button> </form>'
+
     from bson.objectid import ObjectId
     return render_template('home.html', past_posts=Markup(allUserNames))
 
