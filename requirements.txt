@@ -21,4 +21,5 @@ sqlparse
 Tempita
 Werkzeug
 WTForms
+Flask-pymongo
 bson
