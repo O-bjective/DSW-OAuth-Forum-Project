@@ -22,4 +22,5 @@ Tempita
 Werkzeug
 WTForms
 Flask-pymongo
+Flask-dnspython
 bson
